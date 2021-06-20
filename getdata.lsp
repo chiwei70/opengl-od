@@ -1,14 +1,18 @@
-(defun c:getdata ( / a cc e eg en et n p p0 ps s x y z f)
+(defun c:getdata ( / a cc e en et n p0 ps s x y z f numpolylines)
     (setq f (open "e:/fdb/pline.dat" "w"));;;打开文件
     (setq a (ssget '((0 . "polyline"))))
     (setq aa (dxfcod -1 a))
-    (write-line (rtos (length aa) 2 0 ) f);;;线段数量
+    (setq numpolylines (length aa) )
+    (write-line (rtos numpolylines 2 0 ) f);;;线段数量
     (setq count 0)
-    (foreach p aa
+    (foreach p aa   ;;;循环处理每一根线
         (setq e (cdr p))
         (setq en (entnext e))
         (setq eg (entget en))
         (setq p (cdr (assoc 10 eg)) p0 p)
+        (setq color (cdr (assoc 62 eg)))
+        (setq time (read (cdr (assoc 8 eg))))
+        ;;;(prin1 "color is " )(print color)
         
         (setq x (car p))
         (setq y (cadr p))
@@ -22,7 +26,10 @@
         (setq n 1)
         (setq et "VERTEX")
         (setq count (+ count 1))
-        (print count)
+        (setq ratio (* 100 (/ (float count) numpolylines)))
+        ;;;(setq ratio (inte ratio))
+        (print ratio)
+        (princ " % ")
         (while (= et "VERTEX")
             (setq e en)
             (setq en (entnext e))
@@ -47,8 +54,8 @@
             )
         )
         ;;;每段 polyline 输出
-        (write-line (rtos 2 2 0 ) f);;;线段颜色
-        (write-line (rtos 3 2 0 ) f);;;显示时间
+        (write-line (rtos color 2 0 ) f);;;线段颜色
+        (write-line (rtos time 2 0 ) f);;;显示时间
         (write-line (rtos (- (length bb) 1) 2 0)  f)
         ;;;(print (length bb))
         (foreach p bb
