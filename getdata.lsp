@@ -3,6 +3,7 @@
     (setq a (ssget '((0 . "polyline"))))
     (setq aa (dxfcod -1 a))
     (write-line (rtos (length aa) 2 0 ) f);;;线段数量
+    (setq count 0)
     (foreach p aa
         (setq e (cdr p))
         (setq en (entnext e))
@@ -20,6 +21,8 @@
         (setq cc (cons p cc))
         (setq n 1)
         (setq et "VERTEX")
+        (setq count (+ count 1))
+        (print count)
         (while (= et "VERTEX")
             (setq e en)
             (setq en (entnext e))
@@ -47,6 +50,7 @@
         (write-line (rtos 2 2 0 ) f);;;线段颜色
         (write-line (rtos 3 2 0 ) f);;;显示时间
         (write-line (rtos (- (length bb) 1) 2 0)  f)
+        ;;;(print (length bb))
         (foreach p bb
             ;;;(print p)
             ;;;x y z 对应OpenGL中的x -z y，所以 car caddr -cadr
