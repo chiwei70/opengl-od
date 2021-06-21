@@ -11,6 +11,7 @@
    getdata.lsp
    vcruntime140_1.dll，安装到system32目录下
 2、CAD加载lisp程序，appload，选择getdata.lsp
+   加载arc2pline，增加一个 cc 命令，可以将 圆弧 转换为可处理的格式 polyline
 3、CAD中执行 getdata，选择3dpoly绘制的多个polyline
 4、工作目录下，产生pline.dat数据文件
 5、执行bigV
@@ -20,6 +21,7 @@
 
 CAD常用命令
 1、加载lisp程序，appload，选择getdata.lsp
+2、
 3、绘制命令 3dpoly
 4、修改物体颜色
    chprop - 选择物体 - c - 颜色编号（0 - 255），颜色应该够用
