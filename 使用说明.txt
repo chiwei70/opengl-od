@@ -1,0 +1,33 @@
+目前是在CAD中
+1、用3dpoly命令绘制，目前只认这一种物体，顶点要多
+2、线段有颜色（编号，0·255），不能bylayer
+3、图层名是绘制时间（单位：秒）
+
+使用方法：
+1、软件安装
+   bigV.exe
+   7.4.camera.fs
+   7.4.camera.vs
+   getdata.lsp
+   vcruntime140_1.dll，安装到system32目录下
+2、CAD加载lisp程序，appload，选择getdata.lsp
+3、CAD中执行 getdata，选择3dpoly绘制的多个polyline
+4、工作目录下，产生pline.dat数据文件
+5、执行bigV
+6、交互操作
+   鼠标是旋转相机
+   wasd漫游，空格上升，z下降
+
+CAD常用命令
+1、加载lisp程序，appload，选择getdata.lsp
+3、绘制命令 3dpoly
+4、修改物体颜色
+   chprop - 选择物体 - c - 颜色编号（0 - 255），颜色应该够用
+   线的颜色必须用这种方式设置，不能 bylayer
+5、修改所在图层
+   chprop -  选择物体 - la - 图层名（5就是5秒，3.3 就是3.3秒）
+6、加密线段上顶点，更均匀
+   先画出线
+   div - 选择物体 - 定点数，则会均匀沿着线产生顶点
+   删除之前的线段，用捕捉基于刚才产生的顶点，重新3dpoly画一遍
+   To do：今后可以在CityMaker中加密顶点
