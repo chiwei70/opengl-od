@@ -11,7 +11,8 @@
    getdata.lsp
    vcruntime140_1.dll，安装到system32目录下
 2、CAD加载lisp程序，appload，选择getdata.lsp
-   加载arc2pline，增加一个 cc 命令，可以将 圆弧 转换为可处理的格式 polyline
+   加载 od.lsp，增加一个 od 命令，在世界坐标系下，输入2个弧线端点，角度，绘制 3dpoly od线（100段线段）
+   To do：可以输入线段数量，缺省100
 3、CAD中执行 getdata，选择3dpoly绘制的多个polyline
 4、工作目录下，产生pline.dat数据文件
 5、执行bigV
