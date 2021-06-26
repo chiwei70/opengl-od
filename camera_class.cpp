@@ -477,7 +477,7 @@ int main(int   argc, char* argv[])
 		cout << tSize / 7 << " polylines" << endl;
 		glBindVertexArray(VAOs[i]);
 		glBindBuffer(GL_ARRAY_BUFFER, VBOs[i]);
-		glBufferData(GL_ARRAY_BUFFER, verDataP[i]->size() * sizeof(float), &(*verDataP[i])[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, verDataP[i]->size() * sizeof(float), &(*verDataP[i])[0], GL_DYNAMIC_DRAW);
 		// position attribute
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
@@ -502,6 +502,9 @@ int main(int   argc, char* argv[])
 	float blend = 0.3;
 	while (!glfwWindowShouldClose(window))
 	{
+		clock_t t1, t2, t3, t4, t5, t6, t7, t8;
+		
+		t1 = clock();
 		// per-frame time logic
 		// --------------------
 		float currentFrame = glfwGetTime();
@@ -522,7 +525,7 @@ int main(int   argc, char* argv[])
 		ourShader.use();
 
 		// pass projection matrix to shader (note that in this case it could change every frame)
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.01f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
 		ourShader.setMat4("projection", projection);
 
 		// camera/view transformation
@@ -533,6 +536,8 @@ int main(int   argc, char* argv[])
 		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		model = glm::translate(model, glm::vec3(0.0, 0.0, 0.0));
 		ourShader.setMat4("model", model);
+
+		t2 = clock();
 
 		// model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
@@ -582,7 +587,7 @@ int main(int   argc, char* argv[])
 				}
 
 
-
+				t3 = clock();
 
 				for (int j = 0; j < it->second->size(); j++) {
 				//for (int j = 0; j < 2; j++) {
@@ -606,7 +611,8 @@ int main(int   argc, char* argv[])
 							// cout << "drawPos =	"<< lineEffects[currentPolyline]->drawPos <<"  m = "<<m<<"  pos = " << pos <<"  "<< verDataP[currentPolyline]->size() / 6 <<" vertices!"<< endl;
 							*(pAlpha +  m * 7) = alphaPool[pos];
 						}
-						glBufferData(GL_ARRAY_BUFFER, verDataP[currentPolyline]->size() * sizeof(float), &(*verDataP[currentPolyline])[0], GL_STATIC_DRAW);
+
+						glBufferData(GL_ARRAY_BUFFER, verDataP[currentPolyline]->size() * sizeof(float), &(*verDataP[currentPolyline])[0], GL_DYNAMIC_DRAW);
 						// cout << "glBufferData currentPolyline = " << currentPolyline << endl;
 
 
@@ -617,13 +623,20 @@ int main(int   argc, char* argv[])
 						glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(3 * sizeof(float)));
 						glEnableVertexAttribArray(1);
 					
-
+						t4 = clock();
 
 						//绘制
 						glDrawArrays(GL_LINE_STRIP, 0, verDataP[currentPolyline]->size() / 7);
 						// cout << "glDrawArrays currentPolyline = " << currentPolyline << endl;
 
+						t5 = clock();
+
 					}
+
+					// cout << (double)(1000. * (double)(t2 - t1) / CLOCKS_PER_SEC) << "  " << (double)(1000. * (double)(t3 - t2) / CLOCKS_PER_SEC) << "  " << (double)(1000. * (double)(t4 - t3) / CLOCKS_PER_SEC) << "  " << (double)(1000. * (double)(t5 - t4) / CLOCKS_PER_SEC) << endl;
+
+
+
 					//1秒增加一段
 					// static clock_t oldTT, currentTT;
 
@@ -666,10 +679,10 @@ int main(int   argc, char* argv[])
 			firstT = clock();
 
 		currentT = clock();
-		double t1 = (double)(1000. * (double)(currentT - oldT) / CLOCKS_PER_SEC);
-		double t2 = (double)(1000. * (double)(currentT - firstT) / CLOCKS_PER_SEC);
+		double tt1 = (double)(1000. * (double)(currentT - oldT) / CLOCKS_PER_SEC);
+		double tt2 = (double)(1000. * (double)(currentT - firstT) / CLOCKS_PER_SEC);
 		if(counter>0)
-			cout << "after swapbuffers, use " << t1 << "  "<<(int)(1000/t1)<<" fps"<< "    average fps = "<< (int)(1000 * counter / t2)<<endl;
+			cout << "after swapbuffers, use " << tt1 << "  "<<(int)(1000/tt1)<<" fps"<< "    average fps = "<< (int)(1000 * counter / tt2)<<endl;
 		
 		oldT = currentT;
 		counter++;
